@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:form_train_app/model/user.dart';
+import 'package:form_train_app/pages/user_info_page.dart';
 
 class RegisterFormPage extends StatefulWidget {
   const RegisterFormPage({super.key});
@@ -50,6 +52,8 @@ class _RegisterFormPageState extends State<RegisterFormPage> {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
+  User newUser = User();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +74,7 @@ class _RegisterFormPageState extends State<RegisterFormPage> {
                 fieldFocusChange(context, nameFocus, phoneFocus);
               },
               validator: validateName,
+              onSaved: (newValue) => newUser.name = newValue,
               controller: nameController,
               decoration: InputDecoration(
                 labelText: 'Full Name *',
@@ -115,6 +120,7 @@ class _RegisterFormPageState extends State<RegisterFormPage> {
                   ? null
                   : 'Phone number must be entered as requiered',
               keyboardType: TextInputType.phone,
+              onSaved: (newValue) => newUser.phone = newValue,
               controller: phoneController,
               decoration: InputDecoration(
                 labelText: 'Phone Number *',
@@ -150,6 +156,7 @@ class _RegisterFormPageState extends State<RegisterFormPage> {
             TextFormField(
               validator: validateEmail,
               controller: emailController,
+              onSaved: (newValue) => newUser.email = newValue,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 labelText: 'Email Addess',
@@ -174,6 +181,7 @@ class _RegisterFormPageState extends State<RegisterFormPage> {
                 print(data);
                 setState(() {
                   _selectedCountry = data;
+                  newUser.country = data;
                 });
               },
               value: _selectedCountry,
@@ -187,6 +195,7 @@ class _RegisterFormPageState extends State<RegisterFormPage> {
             ),
             TextFormField(
               controller: storyController,
+              onSaved: (newValue) => newUser.story = newValue,
               decoration: InputDecoration(
                 labelText: 'Life Story',
                 hintText: 'Tell us about yourself',
@@ -310,7 +319,14 @@ class _RegisterFormPageState extends State<RegisterFormPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserInfoPage(
+                      userInfo: newUser,
+                    ),
+                  ),
+                );
               },
               child: Text(
                 'Verified',
